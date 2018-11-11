@@ -9,6 +9,8 @@ class App extends Component {
 
     this.state = {
       step: 0,
+      score: [0, 0],
+      players: ['Player 1', 'Player 2'],
     };
   }
 
@@ -18,24 +20,52 @@ class App extends Component {
     });
   };
 
+  increaseScore = (player) => {
+    let score = this.state.score;
+    score[player - 1] = score[player - 1] + 1;
+
+    this.setState({
+      score,
+    });
+  };
+
+  changePlayerName = (index, player_name) => {
+    let players = this.state.players;
+    players[index] = player_name;
+
+    this.setState({
+      players,
+    });
+  };
 
   reset = () => {
     this.setState({
       step: 0,
+      score: [0, 0],
     });
   };
 
   render() {
 
-    const { step } = this.state;
+    const { step, score, players } = this.state;
 
     return (
       <div className={'main'}>
         {
           step < 2 ?
-          <Home step={step} incrementStep={this.incrementStep}/>
+          <Home
+            step={step}
+            incrementStep={this.incrementStep}
+            changePlayerName={this.changePlayerName}
+            players={players}
+          />
           :
-          <Grid reset={this.reset} />
+          <Grid
+            score={score}
+            players={players}
+            reset={this.reset}
+            increaseScore={this.increaseScore}
+          />
         }
       </div>
     );

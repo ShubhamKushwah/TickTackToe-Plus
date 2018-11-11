@@ -9,10 +9,18 @@ export default class Grid extends Component {
       grid: [[0, 0, 0], [0, 0, 0], [0, 0, 0]],
       player: 1,
     };
+
+    this.winner = React.createRef();
   }
 
   getCurrentPlayer = () => {
     return this.state.player === 1 ? 2 : 1;
+  };
+
+  clear = () => {
+    this.setState({
+      grid: [[0, 0, 0], [0, 0, 0], [0, 0, 0]],
+    });
   };
 
   getTwoBlocks = (b1, b2) => {
@@ -77,7 +85,11 @@ export default class Grid extends Component {
       }
       if (compare.length !== 0) {
         if (compare[0] === compare[1] && compare[0] !== 0 && compare[0] === this.getCurrentPlayer()) {
-          alert('Player ' + this.getCurrentPlayer() + ' won!');
+          //WIN
+          this.props.increaseScore(this.getCurrentPlayer());
+          this.clear();
+          this.winner.current.style.height = '129px';
+          setTimeout(() => {this.winner.current.style.height = '0';}, 1000);
         }
       }
     }
@@ -87,7 +99,7 @@ export default class Grid extends Component {
     e.preventDefault();
     e.target.disabled = true;
 
-    let {grid, player} = this.state;
+    let { grid, player } = this.state;
 
     grid[out_index][in_index] = player;
 
@@ -103,7 +115,7 @@ export default class Grid extends Component {
 
     const { grid } = this.state;
 
-    const { reset } = this.props;
+    const { reset, score, players } = this.props;
 
     const renderBlocks = () => {
 
@@ -139,16 +151,19 @@ export default class Grid extends Component {
     return (
       <div>
         <div className={'top_container'}>
-          <span className={'player'}>Shubham Kushwah</span>
+          <span className={'player'}>{players[0]} <span>{score[0]} Wins</span></span>
           <span className={'player'}>v/s</span>
-          <span className={'player'}>Saumya Kushwah</span>
+          <span className={'player'}>{players[1]} <span>{score[1]} Wins</span></span>
         </div>
         <div className={'grid'}>
           {renderBlocks()}
         </div>
         <div className={'bottom_container'}>
           <button className={'btn'} onClick={() => reset()}>RESTART</button>
-          <button className={'btn clear'} onClick={() => this.setState({ grid: [[0, 0, 0], [0, 0, 0], [0, 0, 0]],}) }>CLEAR</button>
+          <button className={'btn clear'} onClick={this.clear}>CLEAR</button>
+        </div>
+        <div ref={this.winner} className={'winner'}>
+          {players[this.getCurrentPlayer() - 1]} WON <span role={'img'} aria-label="cheers">🎉</span>
         </div>
       </div>
     );
