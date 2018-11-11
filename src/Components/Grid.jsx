@@ -8,6 +8,8 @@ export default class Grid extends Component {
     this.state = {
       grid: [[0, 0, 0], [0, 0, 0], [0, 0, 0]],
       player: 1,
+      draw: false,
+      move_count: 0,
     };
 
     this.winner = React.createRef();
@@ -20,6 +22,7 @@ export default class Grid extends Component {
   clear = () => {
     this.setState({
       grid: [[0, 0, 0], [0, 0, 0], [0, 0, 0]],
+      move_count: 0,
     });
   };
 
@@ -66,8 +69,8 @@ export default class Grid extends Component {
     // this ugly ass hard coded shit could be turned into a 6 line algo, but later...
   };
 
-  validate = (b1, b2) => {
-    const { grid } = this.state;
+  validate = async (b1, b2) => {
+    const { grid, move_count } = this.state;
 
     const counters = this.getTwoBlocks(b1, b2);
 
@@ -78,7 +81,6 @@ export default class Grid extends Component {
           let x, y;
           x = counters[i][j][0];
           y = counters[i][j][1];
-          console.log('grid: ', grid[x][y]);
           compare.push(grid[x][y]);
         } else {
         }
@@ -89,7 +91,21 @@ export default class Grid extends Component {
           this.props.increaseScore(this.getCurrentPlayer());
           this.clear();
           this.winner.current.style.height = '129px';
-          setTimeout(() => {this.winner.current.style.height = '0';}, 1000);
+          setTimeout(() => {
+            this.winner.current.style.height = '0';
+          }, 1000);
+          break;
+        } else if (move_count === 9) {
+          console.log(i);
+          this.setState({
+            draw: true,
+          });
+          this.winner.current.style.height = '129px';
+          setTimeout(() => {
+            this.winner.current.style.height = '0';
+          }, 1000);
+          this.clear();
+          break;
         }
       }
     }
@@ -99,13 +115,15 @@ export default class Grid extends Component {
     e.preventDefault();
     e.target.disabled = true;
 
-    let { grid, player } = this.state;
+    let {grid, player} = this.state;
 
     grid[out_index][in_index] = player;
 
     await this.setState({
       grid,
+      move_count: this.state.move_count + 1,
       player: this.getCurrentPlayer(),
+      draw: false,
     });
 
     this.validate(out_index, in_index);
@@ -113,9 +131,9 @@ export default class Grid extends Component {
 
   render() {
 
-    const { grid } = this.state;
+    const { grid, draw } = this.state;
 
-    const { reset, score, players } = this.props;
+    const {reset, score, players} = this.props;
 
     const renderBlocks = () => {
 
@@ -151,9 +169,9 @@ export default class Grid extends Component {
     return (
       <div>
         <div className={'top_container'}>
-          <span className={'player'}>{players[0]} <span>{score[0]} Wins</span></span>
+          <span className={'player'}>{players[0]} <span>{score[0]} Win{score[0] > 1 ? 's' : ''}</span></span>
           <span className={'player'}>v/s</span>
-          <span className={'player'}>{players[1]} <span>{score[1]} Wins</span></span>
+          <span className={'player'}>{players[1]} <span>{score[1]} Win{score[0] > 1 ? 's' : ''}</span></span>
         </div>
         <div className={'grid'}>
           {renderBlocks()}
@@ -163,7 +181,7 @@ export default class Grid extends Component {
           <button className={'btn clear'} onClick={this.clear}>CLEAR</button>
         </div>
         <div ref={this.winner} className={'winner'}>
-          {players[this.getCurrentPlayer() - 1]} WON <span role={'img'} aria-label="cheers">🎉</span>
+          {draw ? 'Draw' : players[this.getCurrentPlayer() - 1]} {draw ? '' : 'WON '} {draw ? '' : <span role={'img'} aria-label="cheers">🎉</span> }
         </div>
       </div>
     );
