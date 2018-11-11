@@ -1,0 +1,31 @@
+.grid
+  display: flex
+  width: 700px
+  height: 700px
+  max-width: 100vw
+  max-height: 100vh
+  margin: 32px
+
+  .row
+    flex: 1
+    display: flex
+    flex-direction: column
+
+    &:nth-child(n)
+      border-right: 1px solid $darkGrey
+
+    &:first-child
+      border-left: 1px solid $darkGrey
+
+    .block
+      flex: 1
+
+      &:nth-child(n)
+        border-bottom: 1px solid $darkGrey
+
+      &:first-child
+        border-top: 1px solid $darkGrey
+
+      &:hover
+        cursor: pointer
+        background: #E1F5FE
