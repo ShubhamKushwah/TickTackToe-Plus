@@ -59,7 +59,7 @@ export default class Grid extends Component {
   };
 
   validate = (b1, b2) => {
-    const {grid, player} = this.state;
+    const { grid } = this.state;
 
     const counters = this.getTwoBlocks(b1, b2);
 
@@ -76,7 +76,7 @@ export default class Grid extends Component {
         }
       }
       if (compare.length !== 0) {
-        if(compare[0] === compare[1] && compare[0] !== 0) {
+        if (compare[0] === compare[1] && compare[0] !== 0 && compare[0] === this.getCurrentPlayer()) {
           alert('Player ' + this.getCurrentPlayer() + ' won!');
         }
       }
@@ -101,12 +101,14 @@ export default class Grid extends Component {
 
   render() {
 
-    const {grid} = this.state;
+    const { grid } = this.state;
+
+    const { reset } = this.props;
 
     const renderBlocks = () => {
 
       let blockStyle = {
-        background: '#ff0033',
+        background: '#f1f1f1',
       };
 
       return grid.map((row, out_index) => {
@@ -114,17 +116,17 @@ export default class Grid extends Component {
           {row.map((block, in_index) => {
             if (block === 1) {
               blockStyle = {
-                background: '#323232',
+                background: `url('assets/cookie.svg')`,
                 pointerEvents: 'none',
               };
             } else if (block === 2) {
               blockStyle = {
-                background: '#009688',
+                background: `url('assets/skull.svg')`,
                 pointerEvents: 'none',
               };
             } else {
               blockStyle = {
-                background: '#ff0033',
+                background: '#f1f1f1',
               };
             }
             return <div key={out_index + in_index} onClick={(e) => this.onClickHandler(out_index, in_index, e)}
@@ -135,8 +137,19 @@ export default class Grid extends Component {
     };
 
     return (
-      <div className={'grid'}>
-        {renderBlocks()}
+      <div>
+        <div className={'top_container'}>
+          <span className={'player'}>Shubham Kushwah</span>
+          <span className={'player'}>v/s</span>
+          <span className={'player'}>Saumya Kushwah</span>
+        </div>
+        <div className={'grid'}>
+          {renderBlocks()}
+        </div>
+        <div className={'bottom_container'}>
+          <button className={'btn'} onClick={() => reset()}>RESTART</button>
+          <button className={'btn clear'} onClick={() => this.setState({ grid: [[0, 0, 0], [0, 0, 0], [0, 0, 0]],}) }>CLEAR</button>
+        </div>
       </div>
     );
   }

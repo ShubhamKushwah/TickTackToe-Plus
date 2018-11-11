@@ -1,0 +1,75 @@
+.main
+  width: 100vw
+  height: 100vh
+  display: flex
+  justify-content: center
+  align-items: center
+
+  .main-name
+    color: $blueDark
+    text-align: center
+    font-size: 48px
+    margin-bottom: 48px
+
+  input
+    padding: 16px
+    font-size: 18px
+    font-weight: bold
+    transition: all .2s
+    border: 2px solid transparent
+    color: $darkGrey
+
+    &:focus
+      border: 2px solid $blue
+      outline: none
+
+  .btn
+    padding: 16px
+    font-size: 18px
+    font-weight: bold
+    background: $blue
+    color: $white
+    transition: all .2s
+    border: 2px solid transparent
+
+    &:hover
+      cursor: pointer
+      background: $blueDark
+
+    &:focus
+      outline: none
+
+  .bottom_container
+    width: 100%
+    text-align: center
+
+    .btn
+      width: 50%
+
+    .clear
+      background: #FF9800
+
+      &:hover
+        background: #F57C00
+
+  .top_container
+    width: 100%
+    display: flex
+    text-align: center
+
+    .player
+      flex: 1
+      font-size: 22px
+      font-weight: bold
+      letter-spacing: 1px
+      width: 50%
+      display: inline-block
+      overflow: hidden
+
+      &:first-child
+        color: $blueDark
+        text-align: start
+
+      &:last-child
+        color: $blueDark
+        text-align: end
